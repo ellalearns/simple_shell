@@ -1,185 +1,185 @@
 #include "myshell.h"
 
 /**
- * main - the main shell function
- * @ac: first argument, built in
- * @av: second argument, also built in
- * Return: a default return
+* main - the main shell function
+* @ac: first argument, built in
+* @av: second argument, also built in
+* Return: a default return
 */
 int main(void)
 {
-    extern char **environ;
+extern char **environ;
 
-    pid_t childPid;
+pid_t childPid;
 
-    int status;
+int status;
 
-    char *argv[] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}; /* to be freed ? */
+char *argv[] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}; /* to be freed ? */
 
-    if (isatty(0))
-    {
+if (isatty(0))
+{
 
-        int counter;
-        counter = 0;
+int counter;
+counter = 0;
 
-        while (counter < 1)
-        {
-            int empty = 0;
+while (counter < 1)
+{
+int empty = 0;
 
-            char *string = NULL; /* to be freed ? */
+char *string = NULL; /* to be freed ? */
 
-            str_list **newRequestList = NULL; /* to be freed ? */
+str_list **newRequestList = NULL; /* to be freed ? */
 
-            newRequestList = malloc(sizeof(str_list) * 1024);
+newRequestList = malloc(sizeof(str_list) * 1024);
 
-            string = malloc(sizeof(char) * 1024);
+string = malloc(sizeof(char) * 1024);
 
-            _shellprint();
+_shellprint();
 
-            string = my_getline();
-            string = removeStartSpaces(string);
+string = my_getline();
+string = removeStartSpaces(string);
 
-            if (string)
-            {
-                if (string[0] == '\n')
-                {
-                    empty = 1;
-                }
-                else
-                {
-                    *newRequestList = mystrtok(string);
-                    list_to_argv(*newRequestList, argv);
-                }
-            }
+if (string)
+{
+if (string[0] == '\n')
+{
+empty = 1;
+}
+else
+{
+*newRequestList = mystrtok(string);
+list_to_argv(*newRequestList, argv);
+}
+}
 
-            free(string);
-            free(*newRequestList);
+free(string);
+free(*newRequestList);
 
-            childPid = fork();
+childPid = fork();
 
-            if (childPid == -1)
-            {
-                perror("Error");
-            }
+if (childPid == -1)
+{
+perror("Error");
+}
 
-            if (childPid == 0)
-            {
-                if (empty == 0)
-                {
-                    if (execve(argv[0], argv, environ) == -1)
-                    {
-                        perror("Error");
-                    }
-                }
-            }
-            else
-            {
-                wait(&status);
-            }
-        }
+if (childPid == 0)
+{
+if (empty == 0)
+{
+if (execve(argv[0], argv, environ) == -1)
+{
+perror("Error");
+}
+}
+}
+else
+{
+wait(&status);
+}
+}
 
-    }
+}
 
-    else
+else
 
-    {
-        ssize_t input;
-        size_t inputSize = 1024;
-        char *line = NULL;
-        str_reqList **newList = NULL; /* to be freed ? */
-        int lineCount = 0;
-        int emptyline = 0;
+{
+ssize_t input;
+size_t inputSize = 1024;
+char *line = NULL;
+str_reqList **newList = NULL; /* to be freed ? */
+int lineCount = 0;
+int emptyline = 0;
 
-        newList = malloc(sizeof(str_reqList) * 1024);
-        line = malloc(sizeof(char) * 1024);
+newList = malloc(sizeof(str_reqList) * 1024);
+line = malloc(sizeof(char) * 1024);
 
-        while ((input = getline(&line, &inputSize, stdin)) != EOF)
-        {
-            if ((removeStartSpaces(line))[0] == '\n')
-            {
-                emptyline = 1;
-            }
-            else
-            {
-            myntstrtok(newList, line);
-            lineCount++;
-            }
-        }
+while ((input = getline(&line, &inputSize, stdin)) != EOF)
+{
+if ((removeStartSpaces(line))[0] == '\n')
+{
+emptyline = 1;
+}
+else
+{
+myntstrtok(newList, line);
+lineCount++;
+}
+}
 
-        if (emptyline == 0)
-        {
-            while ((*newList)->line != NULL)
-            {
-                int empty = 0;
-                char *string = NULL; /* to be freed ? */
+if (emptyline == 0)
+{
+while ((*newList)->line != NULL)
+{
+int empty = 0;
+char *string = NULL; /* to be freed ? */
 
-                str_list **newRequestList = NULL; /* to be freed ? */
+str_list **newRequestList = NULL; /* to be freed ? */
 
-                newRequestList = malloc(sizeof(str_list) * 1024);
+newRequestList = malloc(sizeof(str_list) * 1024);
 
-                string = malloc(sizeof(char) * 1024);
+string = malloc(sizeof(char) * 1024);
 
-                string = (*newList)->line;
-                string = removeStartSpaces(string);
+string = (*newList)->line;
+string = removeStartSpaces(string);
 
 
-                if (string)
-                {
-                    if (string[0] == '\n' || string[0] == '\0' || string[0] == EOF)
-                    {
-                        empty = 1;
-                    }
-                    else
-                    {
-                    *newRequestList = mystrtok(string);
-                    list_to_argv(*newRequestList, argv);
-                    }
-                }
+if (string)
+{
+if (string[0] == '\n' || string[0] == '\0' || string[0] == EOF)
+{
+empty = 1;
+}
+else
+{
+*newRequestList = mystrtok(string);
+list_to_argv(*newRequestList, argv);
+}
+}
 
-                childPid = fork();
+childPid = fork();
 
-                if (childPid == -1)
-                {
-                    perror("Error");
-                }
+if (childPid == -1)
+{
+perror("Error");
+}
 
-                if (childPid == 0)
-                {
-                    if (empty == 0)
-                    {
+if (childPid == 0)
+{
+if (empty == 0)
+{
 
-                    if (execve(argv[0], argv, environ) == -1)
-                    {
-                        perror("Error");
-                    }
+if (execve(argv[0], argv, environ) == -1)
+{
+perror("Error");
+}
 
-                    }
-                }
-                else
-                {
-                    wait(&status);
+}
+}
+else
+{
+wait(&status);
 
-                    if ((*newList)->next != NULL)
-                    {
-                        (*newList) = (*newList)->next;
-                    }
+if ((*newList)->next != NULL)
+{
+(*newList) = (*newList)->next;
+}
 
-                    else
+else
 
-                    {
-                        (*newList)->line = NULL;
-                    }
-                }
+{
+(*newList)->line = NULL;
+}
+}
 
-                free(string);
-                free_str_list(*newRequestList);
-            }
+free(string);
+free_str_list(*newRequestList);
+}
 
-            free(line);
-            free_req_list(*newList);
-        }
-    }
+free(line);
+free_req_list(*newList);
+}
+}
 
-    return (0);
+return (0);
 
 }
