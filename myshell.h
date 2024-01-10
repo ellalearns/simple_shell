@@ -44,6 +44,7 @@
     str_list *add_string_to_list(str_list **head, const char *str);
     size_t print_str_list(str_list *head);
     void free_str_list(str_list *head);
+    void free_req_list(str_reqList *head);
 
     str_list *mystrtok(const char *str);
     char *my_getline();

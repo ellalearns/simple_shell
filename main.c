@@ -14,7 +14,7 @@ int main(void)
 
     int status;
 
-    char *argv[] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    char *argv[] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}; /* to be freed ? */
 
     if (isatty(0))
     {
@@ -26,9 +26,9 @@ int main(void)
         {
             int empty = 0;
 
-            char *string = NULL;
+            char *string = NULL; /* to be freed ? */
 
-            str_list **newRequestList = NULL;
+            str_list **newRequestList = NULL; /* to be freed ? */
 
             newRequestList = malloc(sizeof(str_list) * 1024);
 
@@ -51,6 +51,9 @@ int main(void)
                     list_to_argv(*newRequestList, argv);
                 }
             }
+
+            free(string);
+            free(*newRequestList);
 
             childPid = fork();
 
@@ -83,7 +86,7 @@ int main(void)
         ssize_t input;
         size_t inputSize = 1024;
         char *line = NULL;
-        str_reqList **newList = NULL;
+        str_reqList **newList = NULL; /* to be freed ? */
         int lineCount = 0;
         int emptyline = 0;
 
@@ -108,9 +111,9 @@ int main(void)
             while ((*newList)->line != NULL)
             {
                 int empty = 0;
-                char *string = NULL;
+                char *string = NULL; /* to be freed ? */
 
-                str_list **newRequestList = NULL;
+                str_list **newRequestList = NULL; /* to be freed ? */
 
                 newRequestList = malloc(sizeof(str_list) * 1024);
 
@@ -167,7 +170,13 @@ int main(void)
                         (*newList)->line = NULL;
                     }
                 }
+
+                free(string);
+                free_str_list(*newRequestList);
             }
+
+            free(line);
+            free_req_list(*newList);
         }
     }
 
